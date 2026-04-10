@@ -1,1048 +1,431 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ШОУ — 20 лет традиции (2006–2026)</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Nunito:wght@400;700;900&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: #0a0a0a;
-            color: #fff;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-        }
-
-        .presentation {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
-
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 60px;
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            pointer-events: none;
-            text-align: center;
-        }
-
-        .slide.active {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: all;
-        }
-
-        /* ===== SLIDE THEMES ===== */
-
-        .slide-title {
-            background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0d0d 70%);
-        }
-
-        .slide-title h1 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 5rem;
-            background: linear-gradient(135deg, #00ff88, #00ccff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-            animation: glow-pulse 3s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes glow-pulse {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.4); }
-        }
-
-        .slide-title .subtitle {
-            font-size: 1.8rem;
-            color: #aaa;
-            margin-bottom: 10px;
-        }
-
-        .slide-title .date-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #ff6b35, #ff2d78);
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-size: 1.4rem;
-            font-weight: 900;
-            margin-top: 20px;
-            animation: badge-float 2s ease-in-out infinite;
-        }
-
-        @keyframes badge-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .slide-title .emoji-cloud {
-            font-size: 3rem;
-            margin-top: 30px;
-            animation: wiggle 1.5s ease-in-out infinite;
-        }
-
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(3deg); }
-            75% { transform: rotate(-3deg); }
-        }
-
-        /* History slides */
-        .slide-history {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            text-align: left;
-            padding: 50px 80px;
-        }
-
-        .slide-history h2 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 2.6rem;
-            margin-bottom: 30px;
-            color: #00ff88;
-        }
-
-        .slide-history .content {
-            display: flex;
-            gap: 40px;
-            align-items: flex-start;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .slide-history .text-block {
-            flex: 1;
-        }
-
-        .slide-history .visual-block {
-            flex: 0 0 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 6rem;
-            line-height: 1.3;
-        }
-
-        .timeline-item {
-            margin-bottom: 25px;
-            padding-left: 25px;
-            border-left: 3px solid #00ff88;
-            position: relative;
-        }
-
-        .timeline-item::before {
-            content: '💨';
-            position: absolute;
-            left: -16px;
-            top: 0;
-            font-size: 1.4rem;
-        }
-
-        .timeline-item .era {
-            font-size: 0.9rem;
-            color: #00ccff;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .timeline-item .description {
-            font-size: 1.15rem;
-            color: #ccc;
-            line-height: 1.6;
-        }
-
-        .timeline-item .description strong {
-            color: #fff;
-        }
-
-        .highlight {
-            color: #00ff88;
-            font-weight: 900;
-        }
-
-        .highlight-pink {
-            color: #ff2d78;
-            font-weight: 900;
-        }
-
-        .highlight-cyan {
-            color: #00ccff;
-            font-weight: 900;
-        }
-
-        /* Origin slide */
-        .slide-origin {
-            background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a0a2e 100%);
-            text-align: left;
-            padding: 50px 80px;
-        }
-
-        .slide-origin h2 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 2.6rem;
-            margin-bottom: 30px;
-            background: linear-gradient(90deg, #00ff88, #00ccff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .origin-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            width: 100%;
-            max-width: 1100px;
-        }
-
-        .origin-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 25px;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .origin-card:hover {
-            transform: translateY(-5px);
-            border-color: #00ff88;
-        }
-
-        .origin-card .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .origin-card h3 {
-            font-size: 1.3rem;
-            color: #00ccff;
-            margin-bottom: 10px;
-        }
-
-        .origin-card p {
-            font-size: 1.05rem;
-            color: #bbb;
-            line-height: 1.6;
-        }
-
-        /* NFS Slide */
-        .slide-nfs {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a0a 50%, #0a1a0a 100%);
-            padding: 50px 80px;
-        }
-
-        .slide-nfs h2 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 2.4rem;
-            color: #00ff88;
-            margin-bottom: 30px;
-        }
-
-        .nfs-layout {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-            max-width: 1100px;
-        }
-
-        .nfs-diagram {
-            flex: 0 0 350px;
-            background: rgba(0, 255, 136, 0.05);
-            border: 2px solid #00ff88;
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .nfs-diagram .arrow-down {
-            font-size: 2rem;
-            color: #00ff88;
-            margin: 10px 0;
-        }
-
-        .nfs-diagram .box {
-            background: rgba(0, 204, 255, 0.1);
-            border: 1px solid #00ccff;
-            border-radius: 10px;
-            padding: 12px 20px;
-            margin: 8px 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .nfs-diagram .box.game {
-            background: rgba(0, 255, 136, 0.15);
-            border-color: #00ff88;
-            color: #00ff88;
-        }
-
-        .nfs-diagram .box.real {
-            background: rgba(255, 45, 120, 0.15);
-            border-color: #ff2d78;
-            color: #ff2d78;
-        }
-
-        .nfs-text {
-            flex: 1;
-            text-align: left;
-        }
-
-        .nfs-text p {
-            font-size: 1.15rem;
-            color: #ccc;
-            line-height: 1.8;
-            margin-bottom: 15px;
-        }
-
-        /* Rules slide */
-        .slide-rules {
-            background: linear-gradient(135deg, #1a0000 0%, #1a1a2e 100%);
-            padding: 50px 80px;
-        }
-
-        .slide-rules h2 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 2.6rem;
-            color: #ff2d78;
-            margin-bottom: 30px;
-        }
-
-        .rules-container {
-            display: flex;
-            gap: 40px;
-            max-width: 1100px;
-        }
-
-        .rule-block {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 30px;
-            border: 2px solid;
-            text-align: center;
-        }
-
-        .rule-block.good {
-            border-color: #00ff88;
-        }
-
-        .rule-block.bad {
-            border-color: #ff2d78;
-        }
-
-        .rule-block .rule-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-        }
-
-        .rule-block h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .rule-block.good h3 { color: #00ff88; }
-        .rule-block.bad h3 { color: #ff2d78; }
-
-        .rule-block p {
-            font-size: 1.1rem;
-            color: #bbb;
-            line-height: 1.7;
-        }
-
-        .rule-block .consequence {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 900;
-            font-size: 1.2rem;
-        }
-
-        .rule-block.good .consequence {
-            background: rgba(0, 255, 136, 0.1);
-            color: #00ff88;
-        }
-
-        .rule-block.bad .consequence {
-            background: rgba(255, 45, 120, 0.1);
-            color: #ff2d78;
-        }
-
-        /* Evolution slide */
-        .slide-evolution {
-            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
-            padding: 50px 80px;
-            text-align: left;
-        }
-
-        .slide-evolution h2 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 2.4rem;
-            color: #00ccff;
-            margin-bottom: 30px;
-        }
-
-        .evo-timeline {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            max-width: 1100px;
-            width: 100%;
-        }
-
-        .evo-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .evo-card:hover {
-            transform: scale(1.05);
-            border-color: #00ff88;
-        }
-
-        .evo-card .evo-year {
-            font-family: 'Russo One', sans-serif;
-            font-size: 1.6rem;
-            color: #00ff88;
-            margin-bottom: 8px;
-        }
-
-        .evo-card .evo-emoji {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .evo-card .evo-text {
-            font-size: 0.95rem;
-            color: #bbb;
-            line-height: 1.5;
-        }
-
-        /* Stats slide */
-        .slide-stats {
-            background: linear-gradient(135deg, #0d1117 0%, #1a0a2e 100%);
-            padding: 50px 80px;
-        }
-
-        .slide-stats h2 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 2.6rem;
-            color: #ff6b35;
-            margin-bottom: 35px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            max-width: 900px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: #ff6b35;
-        }
-
-        .stat-card .stat-number {
-            font-family: 'Russo One', sans-serif;
-            font-size: 3rem;
-            background: linear-gradient(135deg, #ff6b35, #ff2d78);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-card .stat-label {
-            font-size: 1rem;
-            color: #999;
-            margin-top: 8px;
-            line-height: 1.4;
-        }
-
-        .stat-disclaimer {
-            margin-top: 25px;
-            font-size: 0.85rem;
-            color: #555;
-            font-style: italic;
-        }
-
-        /* Jubilee slide */
-        .slide-jubilee {
-            background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0d0d 70%);
-            padding: 50px 80px;
-        }
-
-        .slide-jubilee h2 {
-            font-family: 'Russo One', sans-serif;
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, #ff6b35, #ff2d78, #ff00ff, #00ccff, #00ff88);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            animation: rainbow-shift 4s ease-in-out infinite;
-        }
-
-        @keyframes rainbow-shift {
-            0%, 100% { filter: hue-rotate(0deg); }
-            50% { filter: hue-rotate(30deg); }
-        }
-
-        .jubilee-text {
-            font-size: 1.4rem;
-            color: #ccc;
-            max-width: 800px;
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .jubilee-quote {
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 4px solid #00ff88;
-            padding: 20px 30px;
-            border-radius: 0 12px 12px 0;
-            max-width: 700px;
-            margin-bottom: 30px;
-        }
-
-        .jubilee-quote p {
-            font-size: 1.3rem;
-            font-style: italic;
-            color: #ddd;
-        }
-
-        .jubilee-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            color: #0a0a0a;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-family: 'Russo One', sans-serif;
-            font-size: 1.6rem;
-            animation: badge-float 2s ease-in-out infinite;
-        }
-
-        /* Final slide */
-        .slide-final {
-            background: radial-gradient(ellipse at center, #0d1a0d 0%, #0a0a0a 70%);
-        }
-
-        .slide-final .final-show {
-            font-family: 'Russo One', sans-serif;
-            font-size: 12rem;
-            background: linear-gradient(135deg, #00ff88, #00ccff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: final-pulse 2s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes final-pulse {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.05); filter: brightness(1.3); }
-        }
-
-        .slide-final .final-sub {
-            font-size: 1.6rem;
-            color: #888;
-            margin-bottom: 30px;
-        }
-
-        .slide-final .final-emoji {
-            font-size: 4rem;
-            animation: wiggle 1s ease-in-out infinite;
-        }
-
-        /* Navigation */
-        .nav-controls {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            z-index: 100;
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-btn:hover {
-            background: rgba(0, 255, 136, 0.2);
-            border-color: #00ff88;
-        }
-
-        .slide-counter {
-            font-size: 1rem;
-            color: #666;
-            font-weight: 700;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #00ff88, #00ccff, #ff00ff);
-            transition: width 0.4s ease;
-            z-index: 100;
-        }
-
-        /* Fart animation overlay */
-        .fart-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
-        }
-
-        .fart-cloud {
-            position: absolute;
-            font-size: 3rem;
-            opacity: 0;
-            animation: fart-rise 3s ease-out forwards;
-        }
-
-        @keyframes fart-rise {
-            0% { opacity: 0.8; transform: translateY(0) scale(0.5); }
-            100% { opacity: 0; transform: translateY(-200px) scale(1.5) rotate(20deg); }
-        }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .slide {
-                padding: 30px 25px;
-            }
-
-            .slide-title h1 {
-                font-size: 3rem;
-            }
-
-            .slide-history,
-            .slide-origin,
-            .slide-nfs,
-            .slide-rules,
-            .slide-evolution,
-            .slide-stats,
-            .slide-jubilee {
-                padding: 30px 25px;
-            }
-
-            .origin-grid,
-            .rules-container,
-            .nfs-layout {
-                flex-direction: column;
-            }
-
-            .origin-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .evo-timeline {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .slide-history .content {
-                flex-direction: column;
-            }
-
-            .slide-history .visual-block {
-                flex: none;
-                font-size: 3rem;
-                flex-direction: row;
-                gap: 10px;
-            }
-
-            .nfs-diagram {
-                flex: none;
-            }
-
-            .slide-final .final-show {
-                font-size: 6rem;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>20 лет традиции «Шоу» (2006–2026)</title>
+
+  <!-- Reveal.js (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css" id="theme">
+
+  <style>
+    :root {
+      --accent: #7CFF6B;
+      --muted: rgba(255,255,255,.75);
+    }
+    .reveal .slides { text-align: left; }
+    .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
+    .reveal h1 span.accent, .reveal h2 span.accent { color: var(--accent); }
+    .reveal .accent { color: var(--accent); }
+    .reveal .muted { color: var(--muted); }
+    .reveal .small { font-size: 0.75em; }
+    .reveal .tiny { font-size: 0.6em; }
+    .reveal .quote {
+      border-left: 4px solid var(--accent);
+      padding: 0.2em 0.8em;
+      margin: 0.6em 0;
+      color: var(--muted);
+    }
+    .reveal ul { margin: 0.6em 0 0.2em 1.1em; }
+    .reveal li { margin: 0.25em 0; }
+    .badge {
+      display: inline-block;
+      padding: .25em .55em;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      font-size: .65em;
+      letter-spacing: .02em;
+      margin-right: .35em;
+      vertical-align: middle;
+      background: rgba(0,0,0,.25);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: rgba(0,0,0,.22);
+    }
+    .kpi {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .kpi .panel { padding: 12px 14px; }
+    .kpi .num { font-size: 1.5em; font-weight: 700; color: var(--accent); }
+    .footer {
+      position: absolute;
+      left: 22px;
+      bottom: 14px;
+      font-size: 0.55em;
+      color: rgba(255,255,255,.45);
+    }
+
+    /* Лёгкая "паровая" анимация на фоне */
+    .steam {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .16;
+      filter: blur(0.5px);
+      background:
+        radial-gradient(30vmax 18vmax at 15% 80%, rgba(124,255,107,.18), transparent 60%),
+        radial-gradient(25vmax 16vmax at 70% 85%, rgba(124,255,107,.12), transparent 60%),
+        radial-gradient(18vmax 12vmax at 45% 92%, rgba(255,255,255,.10), transparent 65%);
+      animation: drift 10s ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      from { transform: translate3d(0,0,0) scale(1); }
+      to   { transform: translate3d(0,-12px,0) scale(1.02); }
+    }
+    code { color: #B7FFB0; }
+  </style>
 </head>
+
 <body>
+<div class="steam"></div>
 
-<div class="progress-bar" id="progressBar"></div>
-<div class="fart-overlay" id="fartOverlay"></div>
+<div class="reveal">
+  <div class="slides">
 
-<div class="presentation" id="presentation">
+    <!-- 1 -->
+    <section>
+      <h1>20 лет традиции <span class="accent">«Шоу»</span></h1>
+      <p class="muted">2006–2026 • лагерные истоки • культурное наследие • газовая безопасность</p>
+      <div class="panel">
+        <p style="margin:0">
+          <span class="badge">Формат</span> 5–7 минут<br/>
+          <span class="badge">Аудитория</span> свои люди, посвятившие жизнь предупреждению ближнего
+        </p>
+      </div>
+      <aside class="notes">
+        Приветствие. Сразу обозначить: мы празднуем не «пердёж», а культуру предупреждения, уважения к носам и традиции, которой уже почти 20 лет.
+      </aside>
+      <div class="footer">Подсказка: клавиши ← →. Нажмите S для режима докладчика (если поддерживается).</div>
+    </section>
 
-    <!-- SLIDE 1: Title -->
-    <div class="slide slide-title active" data-index="0">
-        <div class="subtitle">🏕️ Детский лагерь «Солнечный» → Вечность</div>
-        <h1>Ш О У</h1>
-        <div class="subtitle">Традиции. Честь. Предупреждение.</div>
-        <div class="date-badge">2006 – 2026 🎉 20 ЛЕТ</div>
-        <div class="emoji-cloud">💨 🍑 ⚡ 🎮 💨</div>
-    </div>
+    <!-- 2 -->
+    <section>
+      <h2>Маршрут вечера</h2>
+      <ul>
+        <li><span class="accent">Истоки</span> сортирного юмора в истории и культуре</li>
+        <li>Как именно родилось наше <span class="accent">«ШОУ»</span> (Ковров, «Солнечный», 2006)</li>
+        <li>Как традиция прожила <span class="accent">20 лет</span> и почему до сих пор работает</li>
+        <li>Финал: <span class="accent">юбилей-2026</span> и планы на следующее двадцатилетие</li>
+      </ul>
+      <aside class="notes">
+        Коротко: сначала мировая «научная база», потом — наша легенда и развитие, в конце — юбилей.
+      </aside>
+    </section>
 
-    <!-- SLIDE 2: Ancient History -->
-    <div class="slide slide-history" data-index="1">
-        <h2>📜 Пердёж в мировой истории: Древность</h2>
-        <div class="content">
-            <div class="text-block">
-                <div class="timeline-item">
-                    <div class="era">Древний Шумер — ок. 1900 до н.э.</div>
-                    <div class="description">
-                        <strong>Старейшая зафиксированная шутка в истории человечества</strong> — это шутка про пердёж. Шумерская пословица гласит: <em>«То, чего не случалось с незапамятных времён: молодая жена не пёрнула на коленях у мужа»</em>. Юмору про газы буквально <span class="highlight">4000 лет</span>.
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="era">Древний Египет — ок. 1500 до н.э.</div>
-                    <div class="description">
-                        Фараон <strong>Априй (570-526 до н.э.)</strong>, согласно Геродоту, ответил посланнику пердежом. Буквально — <span class="highlight-pink">дипломатический пердёж</span>. Уровень международных отношений, к которому мы стремимся.
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="era">Древний Рим</div>
-                    <div class="description">
-                        Император <strong>Клавдий</strong> настолько беспокоился о здоровье граждан, что, по свидетельству Светония, рассматривал <span class="highlight">указ, разрешающий пердеть на пирах</span>, узнав, что кто-то заболел, пытаясь сдержаться из вежливости.
-                    </div>
-                </div>
-            </div>
-            <div class="visual-block">
-                <div>🏛️</div>
-                <div>💨</div>
-                <div>📜</div>
-            </div>
+    <!-- 3 -->
+    <section>
+      <h2>Почему пердёжные шутки вообще живут веками</h2>
+      <div class="grid">
+        <div class="panel">
+          <ul>
+            <li>Это <span class="accent">универсально</span>: есть у всех людей → понятный юмор без перевода</li>
+            <li>Это <span class="accent">социальный клапан</span>: снимает напряжение и пафос</li>
+            <li>Это <span class="accent">граница приличий</span>: смешно, потому что «нельзя, но чуть-чуть можно»</li>
+            <li>Это <span class="accent">ритуал</span>: у групп появляются правила, санкции и «легенды»</li>
+          </ul>
         </div>
-    </div>
-
-    <!-- SLIDE 3: Medieval to Modern -->
-    <div class="slide slide-history" data-index="2">
-        <h2>📚 Пердёж в культуре: от Средних веков до наших дней</h2>
-        <div class="content">
-            <div class="text-block">
-                <div class="timeline-item">
-                    <div class="era">XII–XIV вв. — Средневековье</div>
-                    <div class="description">
-                        <strong>Данте Алигьери</strong>, «Божественная комедия» (1320): в <em>Песне XXI «Ада»</em> демон Малакода подаёт сигнал отряду, <span class="highlight-pink">пёрнув как в трубу</span>: <em>«ed elli avea del cul fatto trombetta»</em>. Данте — OG пердёжного юмора в мировой литературе.
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="era">XVI век — Ренессанс</div>
-                    <div class="description">
-                        <strong>Франсуа Рабле</strong>, «Гаргантюа и Пантагрюэль»: целые главы посвящены телесному низу, газам и их звуковому разнообразию. <span class="highlight">Литературный реализм</span> в лучшем виде.
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="era">XVIII–XIX вв.</div>
-                    <div class="description">
-                        <strong>Бенджамин Франклин</strong> написал эссе <em>«Fart Proudly»</em> (1781) для Королевской Академии Брюсселя, предлагая изобрести лекарство, чтобы газы <span class="highlight">приятно пахли</span>. Один из отцов-основателей США — <span class="highlight-pink">автор научной работы о пердеже</span>.
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="era">1857 — Le Pétomane</div>
-                    <div class="description">
-                        <strong>Жозеф Пюжоль</strong>, французский артист, выступавший в «Мулен Руж», <span class="highlight">зарабатывал пердежом</span>. Он мог воспроизводить мелодии, задувать свечи и имитировать звуки канонады. Его шоу собирало больше зрителей, чем Сара Бернар.
-                    </div>
-                </div>
-            </div>
-            <div class="visual-block">
-                <div>📖</div>
-                <div>💨</div>
-                <div>🎭</div>
-            </div>
+        <div class="panel">
+          <p class="quote">
+            «Чем строже серьёзность, тем громче смеётся случайный газ.»
+          </p>
+          <p class="small muted" style="margin:0">
+            Не академическая цитата. Но по смыслу — близко к истине.
+          </p>
         </div>
-    </div>
+      </div>
+      <aside class="notes">
+        Подчеркнуть: мы не первые и не последние. Человечество давно выбрало этот жанр как «мем до мемов».
+      </aside>
+    </section>
 
-    <!-- SLIDE 4: Origin Story -->
-    <div class="slide slide-origin" data-index="3">
-        <h2>🏕️ Рождение традиции: «Солнечный», 2006</h2>
-        <div class="origin-grid">
-            <div class="origin-card">
-                <div class="card-icon">📍</div>
-                <h3>Место</h3>
-                <p>Детский лагерь <span class="highlight">«Солнечный»</span>, город <span class="highlight">Ковров</span>, Владимирская область. Обычный летний лагерь. Необычные дети. Историческое лето.</p>
-            </div>
-            <div class="origin-card">
-                <div class="card-icon">📅</div>
-                <h3>Время</h3>
-                <p>Лето <span class="highlight">2006 года</span>. В мире выходит PlayStation 3, Twitter делает первые шаги, а в палате лагеря «Солнечный» рождается нечто более долговечное, чем любой стартап.</p>
-            </div>
-            <div class="origin-card">
-                <div class="card-icon">🎮</div>
-                <h3>Контекст</h3>
-                <p>Компания друзей активно играет в <span class="highlight-cyan">Need for Speed: Underground 2</span>. Одна из культовых игр эпохи — тюнинг, гонки, неоновые огни и... функция <span class="highlight">Sprite Show</span>.</p>
-            </div>
-            <div class="origin-card">
-                <div class="card-icon">💡</div>
-                <h3>Момент озарения</h3>
-                <p>Кто-то из компании провёл гениальную параллель: выброс азота (пара) из машины в игре = <span class="highlight-pink">выброс «пара» из тела</span>. Так функция Sprite Show стала кодовым словом.</p>
-            </div>
-        </div>
-    </div>
+    <!-- 4 -->
+    <section>
+      <h2>Древнейшие упоминания: шутка старше многих империй</h2>
+      <div class="panel">
+        <p class="quote">
+          Одна из самых древних записанных шуток (шумерская традиция, ~1900 г. до н.э.):<br/>
+          <span class="muted">«Никогда не случалось с незапамятных времён: чтобы молодая женщина не пукнула на коленях у мужа.»</span>
+        </p>
+        <ul>
+          <li>Суть уже тогда: <span class="accent">смешно, потому что телесно и неожиданно</span></li>
+          <li>Уже тогда: <span class="accent">семейный/групповой контекст</span> и «стыдно-нестыдно»</li>
+        </ul>
+      </div>
+      <p class="tiny muted">Примечание: формулировки в переводах разнятся, смысл — устойчивый.</p>
+      <aside class="notes">
+        Здесь можно сделать паузу: «Так что наша традиция — продолжение мировой классики».
+      </aside>
+    </section>
 
-    <!-- SLIDE 5: NFS Connection -->
-    <div class="slide slide-nfs" data-index="4">
-        <h2>🏎️ NFS Underground 2 × Анатомия «ШОУ»</h2>
-        <div class="nfs-layout">
-            <div class="nfs-diagram">
-                <div class="box game">🎮 NFS Underground 2</div>
-                <div class="arrow-down">⬇️</div>
-                <div class="box game">Sprite Show</div>
-                <div class="arrow-down">⬇️</div>
-                <div class="box">Выброс закиси азота<br>«Пар» из-под машины</div>
-                <div class="arrow-down">🔄</div>
-                <div class="box">Ассоциация:<br>пар = газы организма</div>
-                <div class="arrow-down">⬇️</div>
-                <div class="box real">💨 «ШОУ!» → пердёж</div>
-            </div>
-            <div class="nfs-text">
-                <p>В <span class="highlight-cyan">Need for Speed: Underground 2</span> функция <strong>Sprite Show</strong> — визуальный эффект, при котором из-под машины вырывается облако пара/газа от системы закиси азота.</p>
-                <p>Этимологическая цепочка:<br>
-                <span class="highlight">Sprite Show</span> → «шоу» → кодовое слово для предупреждения → <span class="highlight-pink">ТРАДИЦИЯ</span>.</p>
-                <p>Красота этой ассоциации в её простоте: машина выбрасывает пар — человек выбрасывает... <em>другой пар</em>. И в обоих случаях окружающим лучше быть предупреждёнными.</p>
-                <p>Слово <strong>«шоу»</strong> — это одновременно и предупреждение, и название представления. Потому что каждый раз — это маленький <span class="highlight">перформанс</span>. 🎭💨</p>
-            </div>
-        </div>
-    </div>
+    <!-- 5 -->
+    <section>
+      <h2>Античность: театр, площадь и абсолютно земной юмор</h2>
+      <div class="panel">
+        <ul>
+          <li><span class="accent">Древнегреческая комедия</span> (в т.ч. у Аристофана) любила телесные шутки и «низкий регистр»</li>
+          <li><span class="accent">Древний Рим</span>: сатиры, анекдоты, бытовые насмешки — без стерильности</li>
+          <li>Мораль эпохи: чем выше <span class="accent">пафос</span>, тем сильнее работает <span class="accent">приземление</span></li>
+        </ul>
+      </div>
+      <aside class="notes">
+        Без углубления в источники: задача — показать непрерывность жанра.
+      </aside>
+    </section>
 
-    <!-- SLIDE 6: Rules -->
-    <div class="slide slide-rules" data-index="5">
-        <h2>⚖️ Правила традиции «ШОУ»</h2>
-        <div class="rules-container">
-            <div class="rule-block good">
-                <div class="rule-icon">✅</div>
-                <h3>Правильный путь</h3>
-                <p>Участник чувствует приближение момента.</p>
-                <p>Произносит громко и чётко:</p>
-                <p style="font-size: 2rem; margin: 15px 0; font-family: 'Russo One', sans-serif; color: #00ff88;">«ШОУ!»</p>
-                <p>Затем — совершает акт.</p>
-                <div class="consequence">🏆 Уважение. Честь. Соблюдение протокола. Окружающие успевают подготовиться (или эвакуироваться).</div>
-            </div>
-            <div class="rule-block bad">
-                <div class="rule-icon">❌</div>
-                <h3>Путь позора</h3>
-                <p>Участник совершает акт...</p>
-                <p style="font-size: 1.3rem; margin: 15px 0; font-weight: 900; color: #ff2d78;">...без предупреждения «ШОУ»!</p>
-                <p>Тем самым нарушая священный протокол и застав товарищей врасплох.</p>
-                <div class="consequence">🦶🍑 НАКАЗАНИЕ: Удар ногой по заднице. Каждый присутствующий имеет право на один удар. Справедливость сурова, но необходима.</div>
-            </div>
-        </div>
-    </div>
+    <!-- 6 -->
+    <section>
+      <h2>Средневековье: когда «прилично» — это не про юмор</h2>
+      <div class="panel">
+        <ul>
+          <li><span class="accent">Фаблио</span> и народные истории — много «туалетной» комики</li>
+          <li><span class="accent">Чосер</span>, «Рассказ мельника»: знаменитый эпизод с «ответом задом»</li>
+          <li><span class="accent">Рабле</span>: телесность как философия и смех как свобода</li>
+        </ul>
+      </div>
+      <p class="small muted">Жанр пережил рыцарей, чуму, инквизицию — переживёт и наши чаты.</p>
+      <aside class="notes">
+        Связать: «у людей всегда были правила приличия — и способы их безопасно нарушать».
+      </aside>
+    </section>
 
-    <!-- SLIDE 7: Evolution -->
-    <div class="slide slide-evolution" data-index="6">
-        <h2>📈 Эволюция традиции: 20 лет в газах</h2>
-        <div class="evo-timeline">
-            <div class="evo-card">
-                <div class="evo-year">2006–2009</div>
-                <div class="evo-emoji">🏕️</div>
-                <div class="evo-text"><strong>Эра зарождения.</strong> Лагерь «Солнечный». Традиция формируется. Правила устанавливаются путём проб, ошибок и ударов по жопе. NFS:U2 — священное писание.</div>
-            </div>
-            <div class="evo-card">
-                <div class="evo-year">2010–2014</div>
-                <div class="evo-emoji">🎓</div>
-                <div class="evo-text"><strong>Эра экспансии.</strong> Школа, университет — традиция выходит за пределы лагеря. «Шоу» звучит в новых стенах. Непосвящённые в шоке. Посвящённые — в гордости.</div>
-            </div>
-            <div class="evo-card">
-                <div class="evo-year">2015–2019</div>
-                <div class="evo-emoji">🏢</div>
-                <div class="evo-text"><strong>Эра зрелости.</strong> Взрослая жизнь, работа, семьи. Но «шоу» остаётся. Традиция доказывает: настоящие ценности не меняются. Ты можешь надеть костюм, но «шоу» должно прозвучать.</div>
-            </div>
-            <div class="evo-card">
-                <div class="evo-year">2020–2026</div>
-                <div class="evo-emoji">👑</div>
-                <div class="evo-text"><strong>Эра легенды.</strong> Пандемия? «Шоу» по видеосвязи. Расстояние? «Шоу» в голосовых сообщениях. 2026 — <span class="highlight">юбилей</span>. Двадцать лет верности традиции.</div>
-            </div>
+    <!-- 7 -->
+    <section>
+      <h2>Новое время и поп-культура: от сцены до мемов</h2>
+      <div class="grid">
+        <div class="panel">
+          <ul>
+            <li><span class="accent">Le Pétomane</span> (конец XIX века) — сценический артист «газового жанра»</li>
+            <li>Комедийные традиции XX века: скетчи, мультфильмы, ситкомы</li>
+            <li>Интернет эпохи: <span class="accent">мемы</span>, реакции, «пруфы» и вечные «кто это был?»</li>
+          </ul>
         </div>
-    </div>
+        <div class="panel">
+          <p style="margin:0 0 .3em 0"><span class="badge">Вывод</span></p>
+          <p class="quote" style="margin-top:0">
+            У человечества две вечные вещи: потребность смеяться — и потребность предупредить.
+          </p>
+          <p class="small muted" style="margin:0">
+            И вот тут начинается наше «Шоу».
+          </p>
+        </div>
+      </div>
+      <aside class="notes">
+        Переход: «Мировая культура подготовила почву. А дальше — Ковров, 2006».
+      </aside>
+    </section>
 
-    <!-- SLIDE 8: Fun Stats -->
-    <div class="slide slide-stats" data-index="7">
-        <h2>📊 ШОУ в цифрах*</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">20</div>
-                <div class="stat-label">лет традиции<br>2006–2026</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">7 305</div>
-                <div class="stat-label">дней, в которые<br>могло прозвучать «шоу»</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">~14×</div>
-                <div class="stat-label">среднее количество<br>газоиспусканий в день<br>у человека (наука!)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">количество раз, когда<br>кто-то забыл сказать «шоу»<br>и поплатился 🦶🍑</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">1</div>
-                <div class="stat-label">слово, которое<br>объединяет нас<br>два десятилетия</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">0</div>
-                <div class="stat-label">причин<br>останавливаться</div>
-            </div>
-        </div>
-        <div class="stat-disclaimer">* Статистика приблизительная, основана на научных данных о средней частоте метеоризма и ненаучных данных обо всём остальном.</div>
-    </div>
+    <!-- 8 -->
+    <section>
+      <h2>Рождение традиции: <span class="accent">лето 2006</span></h2>
+      <div class="panel">
+        <ul>
+          <li>Место: детский лагерь <span class="accent">«Солнечный»</span>, г. Ковров (Владимирская область)</li>
+          <li>Контекст: компания друзей, бытовые ситуации, где <span class="accent">предупреждение</span> важнее объяснений</li>
+          <li>Изобретение: перед «событием» произносится кодовое слово <span class="accent">«шоу»</span></li>
+          <li>Функция: <span class="accent">сигнал безопасности</span> — «сейчас будет спецэффект, отойдите на безопасную дистанцию»</li>
+        </ul>
+      </div>
+      <aside class="notes">
+        Важно подать как «социальную инженерию»: короткое слово, мгновенная реакция группы.
+      </aside>
+    </section>
 
-    <!-- SLIDE 9: Jubilee -->
-    <div class="slide slide-jubilee" data-index="8">
-        <h2>🎉 2026: С юбилеем, ШОУ!</h2>
-        <div class="jubilee-text">
-            Двадцать лет назад в детском лагере «Солнечный» в городе Ковров группа друзей придумала нечто простое, абсурдное и гениальное. <span class="highlight">Одно слово</span>, которое пережило школу, универ, армию, работу, переезды и пандемию.
-        </div>
-        <div class="jubilee-quote">
-            <p>«Великие традиции не создаются комитетами. Они рождаются в палатах детских лагерей, вдохновлённые выхлопом виртуальных машин и реальных задниц.»</p>
-        </div>
-        <div class="jubilee-text" style="font-size: 1.2rem;">
-            Мы прошли путь от <span class="highlight-cyan">Sprite Show</span> до ритуала, который знает каждый из нас. Это не просто шутка — это <span class="highlight-pink">кодекс чести</span>, <span class="highlight">система оповещения</span> и <span class="highlight-cyan">маркер своих</span>. Если ты слышишь «шоу» — ты среди друзей. 💨
-        </div>
-        <div class="jubilee-badge">20 ЛЕТ ШОУ 💨🏆</div>
-    </div>
+    <!-- 9 -->
+    <section>
+      <h2>Этимология: NFS Underground 2 и <span class="accent">Sprite Show</span></h2>
+      <div class="panel">
+        <ul>
+          <li>Ассоциация с функцией <span class="accent">Sprite Show</span> в Need for Speed Underground 2</li>
+          <li>Визуально: <span class="accent">выброс пара/аэрозоля</span> → «пар» как метафора «пара» из тела</li>
+          <li>Слово <span class="accent">«шоу»</span> стало идеальным:
+            <ul>
+              <li>короткое (успеваешь сказать)</li>
+              <li>громкое (слышно всем)</li>
+              <li>смысловое («сейчас будет эффект»)</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <p class="small muted">Да, это тот редкий случай, когда видеоигра повлияла на ритуал сильнее, чем школьная программа.</p>
+      <aside class="notes">
+        Не углубляться в технику игры; главное — метафора «пар/спрайт» и слово как триггер.
+      </aside>
+    </section>
 
-    <!-- SLIDE 10: Final -->
-    <div class="slide slide-final" data-index="9">
-        <div class="final-show">ШОУ!</div>
-        <div class="final-sub">Сказано. Услышано. Уважено.</div>
-        <div class="final-sub" style="color: #555; font-size: 1rem;">2006–2026 · Ковров · «Солнечный» · NFS Underground 2 · Навсегда</div>
-        <div class="final-emoji">💨🍑🏆🎮🏕️</div>
-    </div>
+    <!-- 10 -->
+    <section>
+      <h2>Канон «Шоу»: правила, дух и… дисциплина</h2>
+      <div class="grid">
+        <div class="panel">
+          <p style="margin:0 0 .4em 0"><span class="badge">Главное правило</span></p>
+          <h3 style="margin:.1em 0 .4em 0"><span class="accent">Сначала «ШОУ»</span> — потом спецэффект</h3>
+          <ul>
+            <li>«Шоу» = <span class="accent">предупреждение</span>, уважение к окружающим и к их дыхательным путям</li>
+            <li>Допускаются варианты: «Шоу-у-у!» / «Шоу, отойдите!» / «Шоу, это я!»</li>
+            <li>Не допускается вариант: <span class="accent">молчаливый сюрприз</span></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <p style="margin:0 0 .4em 0"><span class="badge">Исторический факт</span></p>
+          <p class="muted" style="margin:0 0 .6em 0">
+            В ранние годы за нарушение традиции существовало «наказание» в виде пинка по заднице.
+          </p>
+          <p class="small muted" style="margin:0 0 .6em 0">
+            В юбилейной редакции-2026 предлагаем перейти на <span class="accent">ненасильственные</span> санкции:
+          </p>
+          <ul class="small">
+            <li>«Шоу-штраф»: спеть куплет / сделать чай всем / рассказать историю лагеря-2006</li>
+            <li>«Шоу-токен»: 10₽/50₽ в общий фонд на пикник</li>
+            <li>«Шоу-реабилитация»: три образцовых «ШОУ» подряд</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="notes">
+        Мягко: признаём факт, но не пропагандируем. Юмор: «кодекс безопасности».
+      </aside>
+    </section>
 
+    <!-- 11 -->
+    <section>
+      <h2>Эволюция традиции: 2006 → 2026</h2>
+      <div class="panel">
+        <ul>
+          <li><span class="accent">2006–2009</span>: «легендарный период» — формирование правила, первые «суды чести»</li>
+          <li><span class="accent">2010–2014</span>: «миграция» — традиция переезжает из лагеря в школу/город/компании</li>
+          <li><span class="accent">2015–2019</span>: «стандартизация» — все знают слово, реакция автоматическая</li>
+          <li><span class="accent">2020–2023</span>: «удалёнка и мессенджеры» — появляются текстовые: <code>шоу</code>, <code>ШОУ!</code>, <code>шоу…</code></li>
+          <li><span class="accent">2024–2026</span>: «осознанность» — больше предупреждений, меньше случайностей, больше легенд</li>
+        </ul>
+      </div>
+      <aside class="notes">
+        На этом слайде можно вставить 1–2 личные истории (коротко) — аудитория своя.
+      </aside>
+    </section>
+
+    <!-- 12 -->
+    <section>
+      <h2>Что делает «Шоу» живучим</h2>
+      <div class="grid">
+        <div class="panel">
+          <ul>
+            <li>Это <span class="accent">код</span>: слово = мгновенное понимание</li>
+            <li>Это <span class="accent">смешно</span>, потому что официально и торжественно</li>
+            <li>Это <span class="accent">вежливо</span>: предупреждение — форма заботы</li>
+            <li>Это <span class="accent">наше</span>: привязано к месту, времени и общей памяти</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <p style="margin:0 0 .4em 0"><span class="badge">Формула</span></p>
+          <p class="quote" style="margin-top:0">
+            «Шоу» = дружба + ритуал + предупреждение + смех
+          </p>
+          <p class="small muted" style="margin:0">
+            Традиция, которая повышает качество воздуха в отношениях.<br/>
+            (И иногда — понижает качество воздуха в комнате.)
+          </p>
+        </div>
+      </div>
+      <aside class="notes">
+        Вынести мораль: традиция не про «фу», а про «мы вместе и понимаем друг друга».
+      </aside>
+    </section>
+
+    <!-- 13 -->
+    <section>
+      <h2>Юбилей <span class="accent">2026</span>: 20 лет</h2>
+      <div class="panel">
+        <p style="margin:.2em 0 .7em 0">
+          <span class="badge">Дата рождения</span> лето 2006 • <span class="badge">Юбилей</span> лето/осень 2026
+        </p>
+
+        <div class="kpi">
+          <div class="panel">
+            <div class="num">20</div>
+            <div class="muted small">лет осознанных предупреждений</div>
+          </div>
+          <div class="panel">
+            <div class="num">1</div>
+            <div class="muted small">слово, которое спасло тысячи вдохов</div>
+          </div>
+          <div class="panel">
+            <div class="num">∞</div>
+            <div class="muted small">поводов сказать «ШОУ!»</div>
+          </div>
+          <div class="panel">
+            <div class="num">0</div>
+            <div class="muted small">сомнений, что традиция будет жить</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Можно предложить формат праздника: тост, награды, конкурс на лучшее «ШОУ» и «лучший ложный тревог».
+      </aside>
+    </section>
+
+    <!-- 14 -->
+    <section>
+      <h2>Номинации на юбилей (по-дружески)</h2>
+      <div class="panel">
+        <ul>
+          <li><span class="accent">«Голос Пара»</span> — самое убедительное «ШОУ» года</li>
+          <li><span class="accent">«Раннее предупреждение»</span> — чемпион по заблаговременности</li>
+          <li><span class="accent">«Sprite Show Award»</span> — за самый кинематографичный спецэффект</li>
+          <li><span class="accent">«Тихо, но честно»</span> — за скромность и соблюдение канона</li>
+          <li><span class="accent">«Легенда 2006»</span> — за вклад в мифологию «Солнечного»</li>
+        </ul>
+      </div>
+      <aside class="notes">
+        Тут можно раздать реальные призы: бумажные дипломы, наклейки, смешные медали.
+      </aside>
+    </section>
+
+    <!-- 15 -->
+    <section>
+      <h2>Финал</h2>
+      <div class="panel">
+        <h3 style="margin:.2em 0 .4em 0">Тост за традицию:</h3>
+        <p class="quote" style="margin-top:0">
+          За то, чтобы в любой комнате всегда было место дружбе, смеху и предупреждению.<br/>
+          <span class="accent">ШОУ!</span>
+        </p>
+
+        <p class="small muted" style="margin:.4em 0 0 0">
+          2006 → 2026: от лагерной шутки до устойчивого культурного института.
+        </p>
+      </div>
+      <aside class="notes">
+        Закончить громко и коротко. Можно сделать групповое «ШОУ!» и перейти к неформальной части.
+      </aside>
+    </section>
+
+  </div>
 </div>
 
-<!-- Navigation -->
-<div class="nav-controls">
-    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀</button>
-    <div class="slide-counter" id="slideCounter">1 / 10</div>
-    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">▶</button>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
 <script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
-    const totalSlides = slides.length;
-    const progressBar = document.getElementById('progressBar');
-    const slideCounter = document.getElementById('slideCounter');
-    const fartOverlay = document.getElementById('fartOverlay');
-
-    function updateSlide() {
-        slides.forEach((slide, index) => {
-            slide.classList.toggle('active', index === currentSlide);
-        });
-        progressBar.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
-        slideCounter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
-
-        // Random fart cloud on some slides
-        if (Math.random() > 0.5) {
-            spawnFartCloud();
-        }
-    }
-
-    function changeSlide(direction) {
-        currentSlide += direction;
-        if (currentSlide < 0) currentSlide = 0;
-        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-        updateSlide();
-    }
-
-    function spawnFartCloud() {
-        const cloud = document.createElement('div');
-        cloud.className = 'fart-cloud';
-        cloud.textContent = ['💨', '🌬️', '💭', '☁️'][Math.floor(Math.random() * 4)];
-        cloud.style.left = (Math.random() * 80 + 10) + '%';
-        cloud.style.bottom = (Math.random() * 20) + '%';
-        fartOverlay.appendChild(cloud);
-        setTimeout(() => cloud.remove(), 3000);
-    }
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
-            e.preventDefault();
-            changeSlide(1);
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-            e.preventDefault();
-            changeSlide(-1);
-        }
-    });
-
-    // Touch navigation
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    document.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-
-    document.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 50) {
-            changeSlide(diff > 0 ? 1 : -1);
-        }
-    });
-
-    // Initialize
-    updateSlide();
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: "fade",
+    backgroundTransition: "fade",
+    width: 1200,
+    height: 675,
+    margin: 0.08
+  });
 </script>
-
 </body>
 </html>
